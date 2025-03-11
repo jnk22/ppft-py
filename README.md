@@ -1,12 +1,13 @@
 # ppft-py
 
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ppft-py?pypiBaseUrl=https%3A%2F%2Ftest.pypi.org)
-![PyPI - Implementation](https://img.shields.io/pypi/implementation/ppft-py?pypiBaseUrl=https%3A%2F%2Ftest.pypi.org)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ppft-py)](https://github.com/jnk22/ppft-py/blob/main/pyproject.toml)
+[![PyPI - Implementation](https://img.shields.io/pypi/implementation/ppft-py)](https://github.com/jnk22/ppft-py/blob/main/pyproject.toml)
 [![ci](https://github.com/jnk22/ppft-py/actions/workflows/ci.yml/badge.svg)](https://github.com/jnk22/ppft-py/actions/workflows/ci.yml)
 [![ReadtheDocs](https://readthedocs.org/projects/ppft-py/badge/?version=latest)](https://ppft-py.readthedocs.io)
 [![codecov](https://codecov.io/github/jnk22/ppft-py/graph/badge.svg?token=5EJL318F1D)](https://codecov.io/github/jnk22/ppft-py)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![PyPI - License](https://img.shields.io/pypi/l/ppft-py)](https://github.com/jnk22/ppft-py/blob/main/LICENSE)
 
 Highly optimized Pseudo-Polar Fourier Transform in Python.
 
