@@ -2,6 +2,7 @@
 
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ppft-py)](https://github.com/jnk22/ppft-py/blob/main/pyproject.toml)
 [![PyPI - Implementation](https://img.shields.io/pypi/implementation/ppft-py)](https://github.com/jnk22/ppft-py/blob/main/pyproject.toml)
+[![PyPI - Version](https://img.shields.io/pypi/v/ppft-py)](https://pypi.org/project/ppft-py)
 [![ci](https://github.com/jnk22/ppft-py/actions/workflows/ci.yml/badge.svg)](https://github.com/jnk22/ppft-py/actions/workflows/ci.yml)
 [![ReadtheDocs](https://readthedocs.org/projects/ppft-py/badge/?version=latest)](https://ppft-py.readthedocs.io)
 [![codecov](https://codecov.io/github/jnk22/ppft-py/graph/badge.svg?token=5EJL318F1D)](https://codecov.io/github/jnk22/ppft-py)
