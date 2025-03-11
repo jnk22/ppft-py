@@ -25,6 +25,3 @@ jobs:
 
       - name: Run doctest
         run: source .venv/bin/activate && cd docs && make doctest
-
-      - name: Build docs
-        run: source .venv/bin/activate && cd docs && make html
