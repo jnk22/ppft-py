@@ -3,8 +3,8 @@
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ppft-py?pypiBaseUrl=https%3A%2F%2Ftest.pypi.org)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/ppft-py?pypiBaseUrl=https%3A%2F%2Ftest.pypi.org)
 [![ci](https://github.com/jnk22/ppft-py/actions/workflows/ci.yml/badge.svg)](https://github.com/jnk22/ppft-py/actions/workflows/ci.yml)
-[![ReadtheDocs](https://readthedocs.org/projects/<project-slug>/badge/?version=latest)](https://ppft-py.readthedocs.io)
-[![codecov](https://codecov.io/gh/jnk22/ppft-py/graph/badge.svg)](https://codecov.io/gh/jnk22/ppft-py)
+[![ReadtheDocs](https://readthedocs.org/projects/ppft-py/badge/?version=latest)](https://ppft-py.readthedocs.io)
+[![codecov](https://codecov.io/github/jnk22/ppft-py/graph/badge.svg?token=5EJL318F1D)](https://codecov.io/github/jnk22/ppft-py)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
