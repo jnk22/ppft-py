@@ -4,10 +4,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Final
 
+import array_api_compat.numpy as xnp
 import numpy as np
 import pytest
 
 from ppftpy import ppft3, rppft3
+
+from ._constants import DTYPES_ALL, DTYPES_NON_COMPLEX
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -17,18 +20,6 @@ if TYPE_CHECKING:
 
 RTOL: Final = 1e-12
 ATOL: Final = 1e-12
-
-SUPPORTED_DTYPES: Final = [
-    dtype
-    for dtype in set(np.sctypeDict.values())
-    if np.issubdtype(dtype, np.number) and not np.issubdtype(dtype, np.timedelta64)
-]
-SUPPORTED_DTYPES_COMPLEX: Final = [
-    dtype for dtype in SUPPORTED_DTYPES if np.issubdtype(dtype, np.complexfloating)
-]
-SUPPORTED_DTYPES_NON_COMPLEX: Final = [
-    dtype for dtype in SUPPORTED_DTYPES if not np.issubdtype(dtype, np.complexfloating)
-]
 
 
 @pytest.mark.parametrize("func", [ppft3, rppft3], ids=lambda x: f"func={x.__name__}")
@@ -42,7 +33,7 @@ def test_ppft3_zeros_return_zero_only(zeros_data_3d: NDArray, func: Callable) ->
 def test_ppft3_returns_complex_dtype(data_3d: NDArray, func: Callable) -> None:
     """TODO."""
     output = func(data_3d)
-    assert np.issubdtype(output.dtype, np.complexfloating), (
+    assert xnp.isdtype(output.dtype, "complex floating"), (
         "Output is not of a complex type"
     )
 
@@ -56,23 +47,17 @@ def test_ppft2_sequential_equals_vectorized(data_3d: NDArray, func: Callable) ->
     np.testing.assert_equal(output_vectorized, output_sequential)
 
 
-@pytest.mark.parametrize(
-    "dtype",
-    [*SUPPORTED_DTYPES_NON_COMPLEX, *SUPPORTED_DTYPES_COMPLEX],
-    ids=lambda x: f"dtype={x}",
-)
+@pytest.mark.parametrize("dtype", DTYPES_ALL, ids=lambda x: f"dtype={x}")
 def test_ppft3_supports_data_types(dtype: DTypeLike) -> None:
     """TODO."""
     data = np.ones((4, 4, 4), dtype=dtype)
     out = ppft3(data)
 
     assert not np.isnan(out).any()
-    assert np.issubdtype(out.dtype, np.complexfloating)
+    assert xnp.isdtype(out.dtype, "complex floating")
 
 
-@pytest.mark.parametrize(
-    "dtype", [*SUPPORTED_DTYPES_NON_COMPLEX], ids=lambda x: f"dtype={x}"
-)
+@pytest.mark.parametrize("dtype", DTYPES_NON_COMPLEX, ids=lambda x: f"dtype={x}")
 @pytest.mark.parametrize("func", [ppft3, rppft3], ids=lambda x: f"func={x.__name__}")
 def test_rppft3_supports_non_complex_data_types(
     func: Callable, dtype: DTypeLike
@@ -82,7 +67,7 @@ def test_rppft3_supports_non_complex_data_types(
     out = func(data)
 
     assert not np.isnan(out).any()
-    assert np.issubdtype(out.dtype, np.complexfloating)
+    assert xnp.isdtype(out.dtype, "complex floating")
 
 
 def test_ppft3_returns_correct_shape(data_3d: NDArray) -> None:

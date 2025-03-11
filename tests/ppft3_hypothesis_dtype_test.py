@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Final
 
+import array_api_compat.numpy as xnp
 import numpy as np
 import pytest
 from hypothesis import given, settings
@@ -11,6 +12,8 @@ from hypothesis import strategies as st
 from hypothesis.extra.numpy import arrays
 
 from ppftpy import ppft3, rppft3
+
+from ._constants import DTYPES_COMPLEX, DTYPES_NON_COMPLEX
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -22,20 +25,8 @@ VALID_SHAPE_3D: Final = (
     st.integers(3, MAX_SHAPE_SIZE).filter(lambda x: x % 2 == 0).map(lambda n: (n, n, n))
 )
 
-SUPPORTED_DTYPES: Final = [
-    dtype
-    for dtype in set(np.sctypeDict.values())
-    if np.issubdtype(dtype, np.number) and not np.issubdtype(dtype, np.timedelta64)
-]
-SUPPORTED_DTYPES_COMPLEX: Final = [
-    dtype for dtype in SUPPORTED_DTYPES if np.issubdtype(dtype, np.complexfloating)
-]
-SUPPORTED_DTYPES_NON_COMPLEX: Final = [
-    dtype for dtype in SUPPORTED_DTYPES if not np.issubdtype(dtype, np.complexfloating)
-]
 
-
-@pytest.mark.parametrize("dtype", SUPPORTED_DTYPES_NON_COMPLEX)
+@pytest.mark.parametrize("dtype", DTYPES_NON_COMPLEX)
 @pytest.mark.parametrize("ppft_func", [ppft3, rppft3])
 @given(
     data=arrays(
@@ -52,7 +43,7 @@ def test_ppft3_dtype_handling_non_complex(
     data = data.astype(dtype)
     output = ppft_func(data)
 
-    assert np.issubdtype(output.dtype, np.complexfloating), (
+    assert xnp.isdtype(output.dtype, "complex floating"), (
         "Output is not of a complex type"
     )
     assert not np.isnan(output).any(), "Output contains NaN values"
@@ -60,7 +51,7 @@ def test_ppft3_dtype_handling_non_complex(
 
 @given(
     data=arrays(
-        dtype=st.sampled_from(SUPPORTED_DTYPES_COMPLEX),
+        dtype=st.sampled_from(DTYPES_COMPLEX),
         shape=VALID_SHAPE_3D,
         elements=st.complex_numbers(
             min_magnitude=0.0,
@@ -76,15 +67,13 @@ def test_ppft3_dtype_handling_complex(data: NDArray) -> None:
     """Ensure all complex NumPy dtypes produce valid complex128 output."""
     output = ppft3(data)
 
-    assert np.issubdtype(output.dtype, np.complexfloating), (
+    assert xnp.isdtype(output.dtype, "complex floating"), (
         "Output is not of a complex type"
     )
     assert not np.isnan(output).any(), "Output contains NaN values"
 
 
-@given(
-    data=arrays(dtype=st.sampled_from(SUPPORTED_DTYPES_COMPLEX), shape=VALID_SHAPE_3D)
-)
+@given(data=arrays(dtype=st.sampled_from(DTYPES_COMPLEX), shape=VALID_SHAPE_3D))
 def test_ppft3_dtype_handling_real_mode_complex_raises(data: NDArray) -> None:
     """Ensure real ppft3D only allows non-complex data input."""
     with pytest.raises(
