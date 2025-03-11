@@ -8,7 +8,12 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Annotated, Any, Final, Literal
 
 from cyclopts import App, Group, Parameter, validators
-from cyclopts.types import NonNegativeInt, ResolvedDirectory, ResolvedExistingDirectory
+from cyclopts.types import (  # noqa: TC002
+    NonNegativeInt,
+    PositiveInt,
+    ResolvedDirectory,
+    ResolvedExistingDirectory,
+)
 
 if TYPE_CHECKING:
     import httpx
@@ -73,7 +78,7 @@ def main(  # noqa: PLR0913
     input_dir: InputDirectory = None,
     output_dir: ResolvedDirectory = Path("test_data"),
     seed: NonNegativeInt | None = None,
-    nargout: NonNegativeInt | None = None,
+    nargout: PositiveInt | None = None,
 ) -> None:
     """Generate PPFT output based on the reference MATLAB code.
 
@@ -230,8 +235,8 @@ def __download_matlab_code(url: str, output_dir: Path) -> Path:
             out_filedir = output_dir / filename.stem
             zip_ref.extractall(out_filedir)
 
-        print(f"MATLAB code downloaded and extracted to '{out_filedir.absolute()}'")
-        return out_filedir
+    print(f"MATLAB code downloaded and extracted to '{out_filedir.absolute()}'")
+    return out_filedir
 
 
 if __name__ == "__main__":
