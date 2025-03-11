@@ -17,6 +17,11 @@ jobs:
     steps:
       - name: Check out
         uses: actions/checkout@v4
+        with:
+          # Fetch whole history to include all existing tags.
+          # Otherwise, the package version on non-tag commits would always be
+          # '0.0.0.postX...', which fails the publish action on TestPyPI.
+          fetch-depth: 0
 
       - name: Set up the environment
         uses: ./.github/actions/setup-python-env
