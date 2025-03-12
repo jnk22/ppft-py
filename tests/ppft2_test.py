@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Final
 import array_api_compat.numpy as xnp
 import numpy as np
 import pytest
+from numpy.testing import assert_allclose, assert_array_equal
 
 from ppftpy import ppft2, rppft2
 
@@ -44,7 +45,7 @@ def test_ppft2_sequential_equals_vectorized(data_2d: NDArray, func: Callable) ->
     output_vectorized = func(data_2d, vectorized=True)
     output_sequential = func(data_2d, vectorized=False)
 
-    np.testing.assert_equal(output_vectorized, output_sequential)
+    assert_array_equal(output_vectorized, output_sequential)
 
 
 @pytest.mark.parametrize("dtype", DTYPES_ALL, ids=lambda x: f"dtype={x}")
@@ -98,8 +99,8 @@ def test_ppft2_sectors_symmetric_data(data_2d: NDArray) -> None:
 
     # The returned PPFT2D has two fourier-transformed sectors,
     # therefore we need to compare both parts.
-    np.testing.assert_allclose(np.flipud(result[0]), result[0], atol=ATOL)
-    np.testing.assert_allclose(np.flipud(result[1]), result[1], atol=ATOL)
+    assert_allclose(np.flipud(result[0]), result[0], atol=ATOL)
+    assert_allclose(np.flipud(result[1]), result[1], atol=ATOL)
 
 
 @pytest.mark.parametrize("vectorized", [True, False])
@@ -116,7 +117,7 @@ def test_ppft2_single_equals_multi_mode(
     actual = ppft_func(expanded_data, vectorized=vectorized)
     expected = np.array([ppft_func(d, vectorized=vectorized) for d in expanded_data])
 
-    np.testing.assert_equal(actual, expected)
+    assert_array_equal(actual, expected)
 
 
 @pytest.mark.parametrize("func", [ppft2, rppft2])
@@ -170,9 +171,9 @@ def test_rppft2_equals_ppft2(
     expected = ppft2(data, vectorized=vectorized, scipy_fft=scipy_fft)[:, n:]
 
     if scipy_fft:
-        np.testing.assert_equal(actual, expected)
+        assert_array_equal(actual, expected)
     else:
-        np.testing.assert_allclose(actual, expected, rtol=1e-15, atol=1e-12)
+        assert_allclose(actual, expected, rtol=1e-15, atol=1e-12)
 
 
 @pytest.mark.parametrize("ppft_func", [ppft2, rppft2])
@@ -185,4 +186,4 @@ def test_ppft2_vectorized_equals_sequential(
     expected = ppft_func(data, vectorized=True)
     actual = ppft_func(data, vectorized=False)
 
-    np.testing.assert_equal(actual, expected)
+    assert_array_equal(actual, expected)
