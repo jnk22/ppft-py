@@ -63,12 +63,6 @@ lint = [
   "pyroma>=4.2",
   "numpydoc>=1.8.0",
 ]
-matlab = [
-  "cyclopts>=3.9.1",
-  "httpx>=0.28.1",
-  "tqdm>=4.67.1",
-  # "matlabengine", # This must be installed manually.
-]
 
 [build-system]
 requires = ["hatchling", "uv-dynamic-versioning"]

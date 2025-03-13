@@ -1,5 +1,46 @@
-"""Test data generator CLI."""
 # ruff: noqa: T201, INP001
+"""Test data generator CLI.
+
+This CLI generates test matrices that can be used to verify the
+correctness of the Python implementation. It generates test arrays that
+are passed to the original MATLAB implementation. Both input and output
+data are stored on disk to be used within the regression test suite.
+
+See Also
+--------
+- [MATLAB Engine on GitHub](https://github.com/mathworks/matlab-engine-for-python/)
+- [MATLAB Engine on PyPI](https://pypi.org/project/matlabengine/)
+- [MATLAB Compatibility Overview](https://www.mathworks.com/support/requirements/python-compatibility.html)
+
+Notes
+-----
+To automatically run this CLI with its dependencies, you can use uv.
+This script additionally requires MATLAB installed on your system.
+To generate 2D test data with sizes 2, 4, and 8, run:
+
+```bash
+uv run --with matlabengine generate_test_data.py 2 4 8 --dim 2
+```
+
+This installs the most recent version of MATLAB Engine and assumes it is
+installed at the default installation path. In case you want to use an
+older version of MATLAB Engine, you can explicitly set the required
+version:
+
+```bash
+uv run --with matlabengine==24.2.2 generate_test_data.py 2 4 8 --dim 2
+```
+"""
+
+# /// script
+# requires-python = ">=3.10,<4"
+# dependencies = [
+#   "numpy==2.2.3",
+#   "cyclopts==3.9.3",
+#   "httpx==0.28.1",
+#   "tqdm==4.67.1",
+# ]
+# ///
 
 from __future__ import annotations
 
