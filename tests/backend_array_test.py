@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 import pytest
+from numpy.testing import assert_allclose
 
 from ppftpy import ppft2, ppft3
 
@@ -21,9 +22,7 @@ def test_backend_regression_array_ppft2(
     expected = regression_test_2d.out_data
     actual = array_backend.compute(regression_test_2d.in_data, ppft2)
 
-    np.testing.assert_allclose(
-        actual, expected, rtol=array_backend.rtol, atol=array_backend.atol
-    )
+    assert_allclose(actual, expected, rtol=array_backend.rtol, atol=array_backend.atol)
 
 
 @pytest.mark.regression
@@ -34,9 +33,7 @@ def test_backend_regression_array_ppft3(
     expected = regression_test_3d.out_data
     actual = array_backend.compute(regression_test_3d.in_data, ppft3)
 
-    np.testing.assert_allclose(
-        actual, expected, rtol=array_backend.rtol, atol=array_backend.atol
-    )
+    assert_allclose(actual, expected, rtol=array_backend.rtol, atol=array_backend.atol)
 
 
 @pytest.mark.regression
@@ -59,6 +56,6 @@ def test_backend_array_exceeding_tolerances_ppft2_raises(
 
     with pytest.raises(AssertionError):
         # Raising an error is expected as the expected difference is 1.
-        np.testing.assert_allclose(
+        assert_allclose(
             actual, expected, rtol=array_backend.rtol, atol=array_backend.atol
         )

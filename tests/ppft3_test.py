@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Final
 import array_api_compat.numpy as xnp
 import numpy as np
 import pytest
+from numpy.testing import assert_allclose, assert_array_equal
 
 from ppftpy import ppft3, rppft3
 
@@ -44,7 +45,7 @@ def test_ppft2_sequential_equals_vectorized(data_3d: NDArray, func: Callable) ->
     output_vectorized = func(data_3d, vectorized=True)
     output_sequential = func(data_3d, vectorized=False)
 
-    np.testing.assert_equal(output_vectorized, output_sequential)
+    assert_array_equal(output_vectorized, output_sequential)
 
 
 @pytest.mark.parametrize("dtype", DTYPES_ALL, ids=lambda x: f"dtype={x}")
@@ -100,9 +101,9 @@ def test_ppft3_sectors_symmetric_data(data_3d: NDArray) -> None:
     # therefore we need to compare both parts.
     assert sec1.shape == sec2.shape == sec3.shape
 
-    np.testing.assert_allclose(np.flipud(sec1), sec1, rtol=RTOL, atol=ATOL)
-    np.testing.assert_allclose(np.flipud(sec2), sec2, rtol=RTOL, atol=ATOL)
-    np.testing.assert_allclose(np.flipud(sec3), sec3, rtol=RTOL, atol=ATOL)
+    assert_allclose(np.flipud(sec1), sec1, rtol=RTOL, atol=ATOL)
+    assert_allclose(np.flipud(sec2), sec2, rtol=RTOL, atol=ATOL)
+    assert_allclose(np.flipud(sec3), sec3, rtol=RTOL, atol=ATOL)
 
 
 @pytest.mark.parametrize("vectorized", [True, False], ids=lambda x: f"vectorized={x}")
@@ -123,9 +124,9 @@ def test_rppft3_equals_ppft3(
     expected = ppft3(data, vectorized=vectorized, scipy_fft=scipy_fft)[:, x:]
 
     if scipy_fft:
-        np.testing.assert_equal(actual, expected)
+        assert_array_equal(actual, expected)
     else:
-        np.testing.assert_allclose(actual, expected, rtol=1e-15, atol=1e-11)
+        assert_allclose(actual, expected, rtol=1e-15, atol=1e-11)
 
 
 @pytest.mark.parametrize("vectorized", [True, False])
@@ -142,7 +143,7 @@ def test_ppft3_single_equals_multi_mode(
     actual = ppft_func(expanded_data, vectorized=vectorized)
     expected = np.array([ppft_func(d, vectorized=vectorized) for d in expanded_data])
 
-    np.testing.assert_equal(actual, expected)
+    assert_array_equal(actual, expected)
 
 
 @pytest.mark.parametrize("ppft_func", [ppft3, rppft3])
@@ -155,7 +156,7 @@ def test_ppft3_vectorized_equals_sequential(
     expected = ppft_func(data, vectorized=True)
     actual = ppft_func(data, vectorized=False)
 
-    np.testing.assert_equal(actual, expected)
+    assert_array_equal(actual, expected)
 
 
 @pytest.mark.parametrize("func", [ppft3, rppft3])
@@ -209,7 +210,7 @@ def test_ppft3_original_example_im2(ppft3_func: Callable) -> None:
     assert result.shape == (3, 13, 5, 5)
 
     assert result[0, 0, 0, 0] == pytest.approx(0.0462 - 0.0099j, rel=1e-3)
-    np.testing.assert_allclose(
+    assert_allclose(
         result[0, :, 0, 0],
         np.array(
             [
@@ -231,7 +232,7 @@ def test_ppft3_original_example_im2(ppft3_func: Callable) -> None:
         rtol=1e-2,
     )
 
-    np.testing.assert_allclose(
+    assert_allclose(
         result[0, 0, :, 0],
         np.array(
             [
@@ -262,7 +263,7 @@ def test_ppft3_original_example_im2_ones(ppft3_func: Callable) -> None:
     result = ppft3_func(data)
     assert result.shape == (3, 13, 5, 5)
 
-    np.testing.assert_allclose(
+    assert_allclose(
         result[0, :, 0, 0],
         np.array(
             [
@@ -284,7 +285,7 @@ def test_ppft3_original_example_im2_ones(ppft3_func: Callable) -> None:
         rtol=1e-3,
     )
 
-    np.testing.assert_allclose(
+    assert_allclose(
         result[0, 0, :, 0],
         np.array(
             [

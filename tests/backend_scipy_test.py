@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 import pytest
+from numpy.testing import assert_allclose
 
 from ppftpy import ppft2, ppft3, rppft2, rppft3
 
@@ -24,9 +25,7 @@ def test_backend_regression_scipy_ppft2(
     expected = regression_test_2d.out_data
     actual = scipy_backend.compute(regression_test_2d.in_data, ppft2)
 
-    np.testing.assert_allclose(
-        actual, expected, rtol=scipy_backend.rtol, atol=scipy_backend.atol
-    )
+    assert_allclose(actual, expected, rtol=scipy_backend.rtol, atol=scipy_backend.atol)
 
 
 @pytest.mark.regression
@@ -37,9 +36,7 @@ def test_backend_regression_scipy_ppft3(
     expected = regression_test_3d.out_data
     actual = scipy_backend.compute(regression_test_3d.in_data, ppft3)
 
-    np.testing.assert_allclose(
-        actual, expected, rtol=scipy_backend.rtol, atol=scipy_backend.atol
-    )
+    assert_allclose(actual, expected, rtol=scipy_backend.rtol, atol=scipy_backend.atol)
 
 
 @pytest.mark.regression
@@ -62,7 +59,7 @@ def test_backend_scipy_exceeding_tolerances_ppft2_raises(
 
     with pytest.raises(AssertionError):
         # Raising an error is expected as the expected difference is 1.
-        np.testing.assert_allclose(
+        assert_allclose(
             actual, expected, rtol=scipy_backend.rtol, atol=scipy_backend.atol
         )
 
