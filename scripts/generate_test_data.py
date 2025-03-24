@@ -1,4 +1,3 @@
-# ruff: noqa: T201, INP001
 """Test data generator CLI.
 
 This CLI generates test matrices that can be used to verify the
@@ -182,10 +181,10 @@ def main(  # noqa: PLR0913
 
     print("Starting MATLAB Engine...")
     try:
-        eng: Any = matlab_engine.start_matlab()
+        matlab: Any = matlab_engine.start_matlab()
 
         # Add paths of MATLAB source files to to the engine.
-        eng.addpath(eng.genpath(str(input_dir)), nargout=0)
+        matlab.addpath(matlab.genpath(str(input_dir)), nargout=0)
 
     except Exception as e:  # noqa: BLE001. We cannot import the actual exceptions.
         print(f"Could not start MATLAB Engine: {e}")
@@ -214,7 +213,7 @@ def main(  # noqa: PLR0913
         np.save(output_dir / f"{data_id}_in.npy", data[2], allow_pickle=False)
 
         try:
-            output_data = getattr(eng, function)(data[2], nargout=nargout)
+            output_data = getattr(matlab, function)(data[2], nargout=nargout)
         except Exception as e:  # noqa: BLE001. We cannot import the actual exceptions.
             print(f"Failed to run function '{function}': {e}")
             sys.exit(1)
@@ -241,43 +240,57 @@ def __generate_array(
             return np.linspace(0, 1, n**dim, dtype=float).reshape(shape)
 
 
-def __get_filename_from_response(response: httpx.Response) -> str:
-    from urllib.parse import urlparse
-
-    # Try to read the filename from header.
-    if content_disposition := response.headers.get("Content-Disposition"):
-        for part in content_disposition.split(";"):
-            if "filename=" in part:
-                return part.split("=")[1].strip().strip('"')
-
-    # Fallback to filename based on URL.
-    return Path(urlparse(str(response.url)).path).name
-
-
-def __download_matlab_code(url: str, output_dir: Path) -> Path:
+def __download_matlab_code(url: URL, output_dir: Path) -> Path:
+    import io
     import sys
-    import tempfile
     import zipfile
-    from http import HTTPStatus
 
     import httpx
 
-    response = httpx.get(url, follow_redirects=True, timeout=10)
+    try:
+        response = httpx.get(url, follow_redirects=True, timeout=10)
+        response.raise_for_status()
 
-    if response.status_code != HTTPStatus.OK:
-        print(f"Failed to download file. Status code: {response.status_code}")
-        sys.exit(1)
+        filename = Path(__get_filename_from_response(response)).stem
+        out_filedir = output_dir / filename
+        out_filedir.mkdir(parents=True, exist_ok=True)
 
-    with tempfile.NamedTemporaryFile() as temp_file:
-        temp_file.write(response.content)
-
-        with zipfile.ZipFile(temp_file, "r") as zip_ref:
-            filename = Path(__get_filename_from_response(response))
-            out_filedir = output_dir / filename.stem
+        with io.BytesIO(response.content) as buf, zipfile.ZipFile(buf, "r") as zip_ref:
             zip_ref.extractall(out_filedir)
 
-    print(f"MATLAB code downloaded and extracted to '{out_filedir.absolute()}'")
-    return out_filedir
+        print(f"MATLAB code downloaded and extracted to '{out_filedir.absolute()}'")
+
+    except httpx.RequestError as e:
+        print(f"HTTP request failed: {e}")
+        sys.exit(1)
+
+    except zipfile.BadZipFile:
+        print("Downloaded file is not a valid ZIP archive")
+        sys.exit(1)
+
+    else:
+        return out_filedir
+
+
+def __get_filename_from_response(response: httpx.Response) -> str:
+    import re
+    from urllib.parse import urlparse
+
+    cd = response.headers.get("Content-Disposition", "")
+
+    for part in cd.split(";"):
+        if part.strip().startswith("filename="):
+            filename = part.split("=", 1)[1].strip().strip('"')
+            break
+    else:
+        # Use the URL as path/filename as fallback.
+        filename = Path(urlparse(str(response.url)).path).name
+
+    # Remove dangerous characters and restrict to alphanumeric + safe symbols.
+    filename = re.sub(r'[<>:"/\\|?*\x00-\x1F]', "_", filename)
+
+    # Ensure no directory traversal.
+    return Path(filename).name
 
 
 if __name__ == "__main__":
