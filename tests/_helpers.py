@@ -242,6 +242,7 @@ class DpnpArrayBackend(ArrayBackend):
 
     _NAMESPACE = "dpnp"
     _MIN_VERSION = "0.17.0"
+    _RTOL = 1e-11
 
     @property
     @override
@@ -255,6 +256,10 @@ class DpnpArrayBackend(ArrayBackend):
             pytest.skip(f"dpnp device '{self._device}' is not available")
 
         return {"device": getattr(dpctl, f"select_{self._device}_device")()}
+
+    @override
+    def _to_numpy(self, data: NDArray) -> NDArray:
+        return data.asnumpy()
 
 
 class DaskArrayBackend(ArrayBackend):

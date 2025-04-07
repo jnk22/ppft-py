@@ -115,12 +115,10 @@ have been tested to work:
 | --------------------------------------------- | :-------: | --------------- |
 | [NumPy](https://github.com/numpy/numpy)       |    CPU    | 1.23.0          |
 | [CuPy](https://github.com/cupy/cupy)          |    GPU    | 10.0.0          |
-| [DPNP](https://github.com/IntelPython/dpnp/)  | CPU / GPU | 0.17.0[^1]      |
+| [DPNP](https://github.com/IntelPython/dpnp/)  | CPU / GPU | 0.17.0          |
 | [Dask](https://github.com/dask/dask)          | CPU / GPU | 2024.8.1        |
 | [PyTorch](https://github.com/pytorch/pytorch) | CPU / GPU | 1.13.0          |
 | [JAX](https://github.com/jax-ml/jax)          | CPU / GPU | 0.4.32          |
-
-[^1]: [Released](https://github.com/IntelPython/dpnp/releases/tag/0.17.0), but not yet available on [PyPI](https://pypi.org/project/dpnp/).
 
 The following implementations of the [SciPy](https://github.com/scipy/scipy)
 FFT interface have been tested to work:
