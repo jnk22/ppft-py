@@ -389,7 +389,7 @@ class ScipyScipyBackend(ScipyBackend):
 class MklScipyBackend(ScipyBackend):
     """TODO."""
 
-    _MODULE = "mkl_fft._scipy_fft_backend"
+    _MODULE = "mkl_fft._scipy_fft"
 
 
 class PyfftwScipyBackend(ScipyBackend):
