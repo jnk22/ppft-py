@@ -1,4 +1,4 @@
-"""Example of the 3D Pseudo-Polar Fourier Transform with pyFFTW backend."""
+"""Example of the 3D Pseudo-Polar Fourier Transform with mkl_fft backend."""
 
 import mkl_fft._scipy_fft as mkl_fft
 import numpy as np
