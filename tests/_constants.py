@@ -7,7 +7,11 @@ from typing import Final
 import array_api_compat.numpy as xnp
 import numpy as np
 
-__AVAILABLE_DTYPES: Final = set(np.sctypeDict.values())
+# Filter 'timedelta64' as it is not supported.
+__AVAILABLE_DTYPES: Final = {
+    dtype for dtype in np.sctypeDict.values() if dtype != np.timedelta64
+}
+
 __KINDS_COMPLEX: Final = ("complex floating",)
 __KINDS_NON_COMPLEX: Final = ("bool", "integral", "real floating")
 
