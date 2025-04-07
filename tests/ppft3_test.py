@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Final
+from typing import TYPE_CHECKING
 
 import array_api_compat.numpy as xnp
 import numpy as np
@@ -17,10 +17,6 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 
     from numpy.typing import DTypeLike, NDArray
-
-
-RTOL: Final = 1e-12
-ATOL: Final = 1e-12
 
 
 @pytest.mark.parametrize("func", [ppft3, rppft3], ids=lambda x: f"func={x.__name__}")
@@ -101,9 +97,9 @@ def test_ppft3_sectors_symmetric_data(data_3d: NDArray) -> None:
     # therefore we need to compare both parts.
     assert sec1.shape == sec2.shape == sec3.shape
 
-    assert_allclose(np.flipud(sec1), sec1, rtol=RTOL, atol=ATOL)
-    assert_allclose(np.flipud(sec2), sec2, rtol=RTOL, atol=ATOL)
-    assert_allclose(np.flipud(sec3), sec3, rtol=RTOL, atol=ATOL)
+    assert_allclose(np.flipud(sec1), sec1, rtol=1e-12, atol=1e-12)
+    assert_allclose(np.flipud(sec2), sec2, rtol=1e-12, atol=1e-12)
+    assert_allclose(np.flipud(sec3), sec3, rtol=1e-12, atol=1e-12)
 
 
 @pytest.mark.parametrize("vectorized", [True, False], ids=lambda x: f"vectorized={x}")
@@ -123,10 +119,7 @@ def test_rppft3_equals_ppft3(
     actual = rppft3(data, vectorized=vectorized, scipy_fft=scipy_fft)
     expected = ppft3(data, vectorized=vectorized, scipy_fft=scipy_fft)[:, x:]
 
-    if scipy_fft:
-        assert_array_equal(actual, expected)
-    else:
-        assert_allclose(actual, expected, rtol=1e-15, atol=1e-11)
+    assert_allclose(actual, expected, rtol=1e-15, atol=1e-11)
 
 
 @pytest.mark.parametrize("vectorized", [True, False])

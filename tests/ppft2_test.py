@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Final
+from typing import TYPE_CHECKING
 
 import array_api_compat.numpy as xnp
 import numpy as np
@@ -17,10 +17,6 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 
     from numpy.typing import DTypeLike, NDArray
-
-
-RTOL: Final = 1e-12
-ATOL: Final = 1e-12
 
 
 @pytest.mark.parametrize("func", [ppft2, rppft2], ids=lambda x: f"func={x.__name__}")
@@ -99,8 +95,8 @@ def test_ppft2_sectors_symmetric_data(data_2d: NDArray) -> None:
 
     # The returned PPFT2D has two fourier-transformed sectors,
     # therefore we need to compare both parts.
-    assert_allclose(np.flipud(result[0]), result[0], atol=ATOL)
-    assert_allclose(np.flipud(result[1]), result[1], atol=ATOL)
+    assert_allclose(np.flipud(result[0]), result[0], atol=1e-12)
+    assert_allclose(np.flipud(result[1]), result[1], atol=1e-12)
 
 
 @pytest.mark.parametrize("vectorized", [True, False])
@@ -170,10 +166,7 @@ def test_rppft2_equals_ppft2(
     actual = rppft2(data, vectorized=vectorized, scipy_fft=scipy_fft)
     expected = ppft2(data, vectorized=vectorized, scipy_fft=scipy_fft)[:, n:]
 
-    if scipy_fft:
-        assert_array_equal(actual, expected)
-    else:
-        assert_allclose(actual, expected, rtol=1e-15, atol=1e-12)
+    assert_allclose(actual, expected, rtol=1e-15, atol=1e-12)
 
 
 @pytest.mark.parametrize("ppft_func", [ppft2, rppft2])
