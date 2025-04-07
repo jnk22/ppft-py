@@ -193,7 +193,7 @@ def __ppft2_vectorized(
     out = xp.reshape(out, (-1, n, n))
 
     zeros = xp_inner.zeros((sectors, nh + 1, n), device=device)
-    out = xp.concatenate([zeros[:, :-1], out, zeros], axis=1)
+    out = xp.concat([zeros[:, :-1], out, zeros], axis=1)
     out = fft.ifftshift(out, axes=1)
 
     if rechunk:
@@ -209,7 +209,7 @@ def __ppft2_vectorized(
         out = out.compute()
 
     zeros = xp_inner.zeros((sectors, mx, 1), device=device)
-    out = xp.concatenate([out, zeros], axis=2) * pq
+    out = xp.concat([out, zeros], axis=2) * pq
 
     if rechunk:
         out = out.rechunk({-1: -1})
@@ -248,7 +248,7 @@ def __ppft2_sequential(
     zeros_1 = xp_inner.zeros((nh + 1, n), device=device)
 
     ops = (xp.moveaxis(x, i, 0) for x, i in itertools.product(data_stacked, range(2)))
-    ops = (xp.concatenate([zeros_1[:-1], x, zeros_1]) for x in ops)
+    ops = (xp.concat([zeros_1[:-1], x, zeros_1]) for x in ops)
     ops = (fft.ifftshift(x, axes=0) for x in ops)
 
     if rechunk:
@@ -288,7 +288,7 @@ def __apply_qz(  # noqa: PLR0913
     *,
     rechunk: bool,
 ) -> NDArray[np.complex128 | np.complex256]:
-    x = xp.concatenate([x, zeros], axis=1) * q
+    x = xp.concat([x, zeros], axis=1) * q
 
     if rechunk:
         x = x.rechunk({-1: -1})

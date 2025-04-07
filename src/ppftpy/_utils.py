@@ -91,7 +91,7 @@ def _get_pq_pz(
     pq = xp.exp(-px[:, nhp:-nhp])
 
     zeros = xp_inner.zeros((m, nh), device=device)
-    padded = xp.concatenate((zeros, xp.exp(px), zeros), axis=1)
+    padded = xp.concat((zeros, xp.exp(px), zeros), axis=1)
 
     if is_dask_namespace(xp):
         padded = padded.rechunk({-1: -1})

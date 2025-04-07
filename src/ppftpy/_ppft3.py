@@ -199,7 +199,7 @@ def __ppft3_vectorized(
     out = xp.reshape(out, (-1, n, n, n))
 
     zeros = xp_inner.zeros((sectors, n + 1, n, n), device=device)
-    out = xp.concatenate([zeros[:, :-1], out, zeros], axis=1)
+    out = xp.concat([zeros[:, :-1], out, zeros], axis=1)
     out = fft.ifftshift(out, axes=1)
 
     if rechunk:
@@ -215,7 +215,7 @@ def __ppft3_vectorized(
         out = out.compute()
 
     zeros = xp_inner.zeros((sectors, mx, 1, np), device=device)
-    out = xp.concatenate([xp.moveaxis(out, -2, -1), zeros[..., :-1]], axis=2) * pq
+    out = xp.concat([xp.moveaxis(out, -2, -1), zeros[..., :-1]], axis=2) * pq
 
     if rechunk:
         out = out.rechunk({2: -1})
@@ -225,7 +225,7 @@ def __ppft3_vectorized(
     if compute:
         out = out.compute()
 
-    out = xp.concatenate([xp.moveaxis(out, -2, -1), zeros], axis=2) * pq
+    out = xp.concat([xp.moveaxis(out, -2, -1), zeros], axis=2) * pq
 
     if rechunk:
         out = out.rechunk({2: -1})
@@ -264,7 +264,7 @@ def __ppft3_sequential(
     zeros_1 = xp_inner.zeros((n + 1, n, n), device=device)
 
     ops = (xp.moveaxis(x, i, 0) for x, i in itertools.product(data_stacked, range(3)))
-    ops = (xp.concatenate([zeros_1[:-1], x, zeros_1]) for x in ops)
+    ops = (xp.concat([zeros_1[:-1], x, zeros_1]) for x in ops)
     ops = (fft.ifftshift(x, axes=0) for x in ops)
 
     if rechunk:
@@ -331,7 +331,7 @@ def __apply_qz(  # noqa: PLR0913
     rechunk: bool,
     compute: bool,
 ) -> NDArray[np.complex128 | np.complex256]:
-    x = xp.concatenate([x.T, zeros[:, : len(x)]]) * q
+    x = xp.concat([x.T, zeros[:, : len(x)]]) * q
 
     if rechunk:
         x = x.rechunk({0: -1})
