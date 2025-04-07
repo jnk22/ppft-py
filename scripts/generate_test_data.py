@@ -36,7 +36,7 @@ uv run --with matlabengine==24.2.2 generate_test_data.py 2 4 8 --dim 2
 # requires-python = ">=3.10,<4"
 # dependencies = [
 #   "numpy==2.2.3",
-#   "cyclopts==3.9.3",
+#   "cyclopts==3.10.1",
 #   "httpx==0.28.1",
 #   "tqdm==4.67.1",
 # ]
@@ -50,6 +50,7 @@ from typing import TYPE_CHECKING, Annotated, Any, Final, Literal
 
 from cyclopts import App, Group, Parameter, validators
 from cyclopts.types import (  # noqa: TC002
+    URL,
     NonNegativeInt,
     PositiveInt,
     ResolvedDirectory,
@@ -76,7 +77,7 @@ matlab_source_group = Group(
 InputDirectory = Annotated[
     ResolvedExistingDirectory | None, Parameter(group=matlab_source_group)
 ]
-DownloadUrl = Annotated[str | None, Parameter(group=matlab_source_group)]
+DownloadUrl = Annotated[URL | None, Parameter(group=matlab_source_group)]
 MatrixTypes = Annotated[set[MatrixType], Parameter(negative="")]
 Functions = Annotated[set[str], Parameter(negative="")]
 
