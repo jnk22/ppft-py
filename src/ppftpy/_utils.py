@@ -4,7 +4,7 @@ import functools
 from typing import TYPE_CHECKING, Any, Literal
 
 from array_api_compat import (
-    get_namespace,
+    array_namespace,
     is_cupy_namespace,
     is_dask_namespace,
     is_torch_namespace,
@@ -27,7 +27,7 @@ if TYPE_CHECKING:
 def _get_config(
     data: NDArray, *, scipy_fft: bool
 ) -> tuple[ModuleType, ModuleType, ModuleType, TorchDeviceOrNone, bool, bool]:
-    xp = get_namespace(data)
+    xp = array_namespace(data)
     xp_inner = xp
     fft = _get_fft_backend(xp, scipy_fft=scipy_fft)
     device = data.device if is_torch_namespace(xp) else None
@@ -40,7 +40,7 @@ def _get_config(
         # this for NumPy arrays on CPU for consistency. Accessing
         # '_meta' is considered safe to get the underlying array type:
         # https://github.com/dask/dask/issues/6442
-        xp_inner = get_namespace(data._meta)
+        xp_inner = array_namespace(data._meta)
         rechunk = True
 
         if is_cupy_namespace(xp_inner):
@@ -61,7 +61,7 @@ def _get_fft_backend(xp: ModuleType, *, scipy_fft: bool) -> ModuleType:
 
 
 def _verify_dtype_non_complex(data: NDArray) -> None:
-    if get_namespace(data).isdtype(data.dtype, "complex floating"):
+    if array_namespace(data).isdtype(data.dtype, "complex floating"):
         msg = "Complex data is not supported, please provide real-valued input"
         raise TypeError(msg)
 
