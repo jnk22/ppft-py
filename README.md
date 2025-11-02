@@ -9,6 +9,7 @@
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/jnk22/ppft-py/badge)](https://scorecard.dev/viewer/?uri=github.com/jnk22/ppft-py)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![ty](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ty/main/assets/badge/v0.json)](https://github.com/astral-sh/ty)
 [![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/jnk22/ppft-py/blob/main/LICENSE)
 
 Highly optimized Pseudo-Polar Fourier Transform in Python.

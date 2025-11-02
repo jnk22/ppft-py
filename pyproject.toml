@@ -55,13 +55,12 @@ test = [
   "lark>=1.2.2",
 ]
 lint = [
-  "mypy>=0.991",
-  "pyright>=1.1.394",
   "ruff>=0.9.2",
   "deptry>=0.22.0",
   "vulture>=2.0.0",
   "pyroma>=4.2",
   "numpydoc>=1.8.0",
+  "ty>=0.0.1a25",
 ]
 
 [build-system]
@@ -78,21 +77,6 @@ packages = ["src/ppftpy"]
 vcs = "git"
 style = "pep440"
 metadata = false
-
-[tool.mypy]
-python_version = "3.10"
-disallow_untyped_defs = true
-disallow_any_unimported = true
-no_implicit_optional = true
-check_untyped_defs = true
-warn_return_any = true
-warn_unused_ignores = true
-show_error_codes = true
-
-[tool.pyright]
-reportMissingImports = true
-reportMissingTypeStubs = true
-pythonVersion = "3.10"
 
 [tool.deptry]
 extend_exclude = ["examples", "scripts"]
@@ -130,6 +114,9 @@ convention = "numpy"
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S101"]
 "examples/*" = ["INP001"]
+
+[tool.ty.environment]
+python-platform = "all"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
