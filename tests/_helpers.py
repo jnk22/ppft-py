@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, Any, Final, Protocol
 import numpy as np
 import pytest
 from array_api_compat import is_cupy_array
-from lark import Lark, Token, Transformer
+from lark import Lark, Transformer
 from scipy import fft
 from scipy.fft._backend import _named_backends as known_scipy_backends
 from typing_extensions import override
@@ -19,6 +19,7 @@ if TYPE_CHECKING:
     from collections.abc import Callable
     from types import ModuleType
 
+    from lark import Token
     from numpy.typing import NDArray
 
 
