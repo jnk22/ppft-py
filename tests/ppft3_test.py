@@ -87,7 +87,7 @@ def test_ppft3_returns_correct_shape(data_3d: NDArray) -> None:
 
 
 def test_ppft3_sectors_symmetric_data(data_3d: NDArray) -> None:
-    """Verfiy that all values in a fourier image are equal at its mirrored position."""
+    """Verify that all values in a fourier image are equal at its mirrored position."""
     data = data_3d
 
     # We only care for the magnitude of the data.
