@@ -20,6 +20,7 @@ jobs:
       - name: Check out
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
         with:
+          persist-credentials: false
           # Fetch whole history to include all existing tags.
           # Otherwise, the package version on non-tag commits would always be
           # '0.0.0.postX...', which fails the publish action on TestPyPI.
