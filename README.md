@@ -1,6 +1,6 @@
 # ppft-py
 
-[![Python](https://img.shields.io/badge/python-3.10%20|%203.11%20|%203.12%20|%203.13-blue)](https://github.com/jnk22/ppft-py/blob/main/pyproject.toml)
+[![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13%20%7C%203.14-blue)](https://github.com/jnk22/ppft-py/blob/main/pyproject.toml)
 [![Implementation](https://img.shields.io/badge/implementation-cpython-blue)](https://github.com/jnk22/ppft-py/blob/main/pyproject.toml)
 [![PyPI - Version](https://img.shields.io/pypi/v/ppft-py)](https://pypi.org/project/ppft-py)
 [![ci](https://github.com/jnk22/ppft-py/actions/workflows/ci.yml/badge.svg)](https://github.com/jnk22/ppft-py/actions/workflows/ci.yml)
