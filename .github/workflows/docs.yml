@@ -23,7 +23,7 @@ jobs:
       - name: Set up the environment
         uses: ./.github/actions/setup-python-env
         with:
-          python-version: 3.13
+          python-version: 3.14
 
       - name: Install Python dependencies for sphinx docs
         run: uv venv && uv pip install -r docs/requirements.txt
