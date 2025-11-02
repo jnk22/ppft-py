@@ -155,7 +155,7 @@ PYFFTW_NUM_THREADS = { value = "1", skip_if_set = true }
 JAX_ENABLE_X64 = { value = "True", skip_if_set = true }
 
 # List of backends that are enabled for tests regression tests. Each backend
-# can be extended with devices. Backends are separeted with semicolon (;) and
+# can be extended with devices. Backends are separated with semicolon (;) and
 # devices are separated with commas (,). Tests that cannot be run due to
 # missing packages are skipped automatically.
 #
@@ -171,7 +171,7 @@ TEST_BACKENDS_ARRAY = { value = "numpy", skip_if_set = true }
 
 # List of backends that are enabled for SciPy-compatible tests. Each
 # SciPy-compatible backend uses all applicable array backends specified in
-# 'TEST_BACKENDS_ARRAY'. Backends are separeted with semicolon (;). Tests that
+# 'TEST_BACKENDS_ARRAY'. Backends are separated with semicolon (;). Tests that
 # cannot be run due to missing packages are skipped automatically.
 #
 # Available options: ['all', 'scipy', 'mkl', 'pyfftw', 'cupy']
