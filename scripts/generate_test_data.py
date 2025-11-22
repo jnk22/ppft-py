@@ -187,7 +187,7 @@ def main(  # noqa: PLR0913
         # Add paths of MATLAB source files to to the engine.
         matlab.addpath(matlab.genpath(str(input_dir)), nargout=0)
 
-    except Exception as e:  # noqa: BLE001. We cannot import the actual exceptions.
+    except Exception as e:  # noqa: BLE001 (cannot import the actual exceptions)
         print(f"Could not start MATLAB Engine: {e}")
         sys.exit(1)
 
@@ -215,7 +215,7 @@ def main(  # noqa: PLR0913
 
         try:
             output_data = getattr(matlab, function)(data[2], nargout=nargout)
-        except Exception as e:  # noqa: BLE001. We cannot import the actual exceptions.
+        except Exception as e:  # noqa: BLE001 (cannot import the actual exceptions)
             print(f"Failed to run function '{function}': {e}")
             sys.exit(1)
 
