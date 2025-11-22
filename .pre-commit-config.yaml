@@ -22,15 +22,15 @@ repos:
 
   # EditorConfig
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-    rev: 3.4.1
+    rev: 3.5.0
     hooks:
       - id: editorconfig-checker
 
   # Python
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.3
+    rev: v0.14.6
     hooks:
-      - id: ruff
+      - id: ruff-check
       - id: ruff-format
   - repo: https://github.com/jendrikseipp/vulture
     rev: v2.14
@@ -41,7 +41,7 @@ repos:
     hooks:
       - id: pyroma
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.9.7
+    rev: 0.9.11
     hooks:
       - id: uv-lock
       - id: uv-export
@@ -58,13 +58,13 @@ repos:
 
   # JSON
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.34.1
+    rev: 0.35.0
     hooks:
       - id: check-github-workflows
 
   # TOML
   - repo: https://github.com/tombi-toml/tombi-pre-commit
-    rev: v0.6.39
+    rev: v0.6.52
     hooks:
       - id: tombi-format
       - id: tombi-lint
@@ -88,9 +88,10 @@ repos:
           # Source: https://mdformat.readthedocs.io/en/stable/users/plugins.html
           - mdformat-config
           - mdformat-ruff
-          - ruff==0.14.3
+          - mdformat-gfm
+          - ruff==0.14.6
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: v0.0.170
+    rev: v0.0.181
     hooks:
       - id: rumdl
         args: [--fix]
@@ -106,17 +107,17 @@ repos:
 
   # GitHub Actions
   - repo: https://github.com/rhysd/actionlint
-    rev: v1.7.8
+    rev: v1.7.9
     hooks:
       - id: actionlint
   - repo: https://github.com/zizmorcore/zizmor-pre-commit
-    rev: v1.16.2
+    rev: v1.16.3
     hooks:
       - id: zizmor
 
   # Spelling
   - repo: https://github.com/crate-ci/typos
-    rev: v1.39.0
+    rev: v1.39.2
     hooks:
       - id: typos
 
