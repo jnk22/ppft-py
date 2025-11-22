@@ -1,12 +1,13 @@
 [project]
 name = "ppft-py"
 description = "Highly optimized Pseudo-Polar Fourier Transform in Python"
-authors = [{ name = "Jannik Schäfer", email = "jannik.schaefer@inbox-online.de" }]
 readme = "README.md"
-license = "MIT"
-keywords = ["ppft", "fft"]
 requires-python = ">=3.10,<4"
-dynamic = ["version"]
+license = "MIT"
+authors = [
+  { name = "Jannik Schäfer", email = "jannik.schaefer@inbox-online.de" }
+]
+keywords = ["fft", "ppft"]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
@@ -21,52 +22,61 @@ classifiers = [
   "Programming Language :: Python :: 3.14",
   "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-
 dependencies = [
   "array-api-compat>=1.9",
 ]
+dynamic = ["version"]
 
 [project.urls]
+Documentation = "https://ppft-py.readthedocs.io"
 Homepage = "https://github.com/jnk22/ppft-py"
 Repository = "https://github.com/jnk22/ppft-py"
-Documentation = "https://ppft-py.readthedocs.io"
-
-[tool.uv]
-managed = true
-default-groups = ["dev", "test"]
 
 [dependency-groups]
 dev = [
-  "typing-extensions>=4.12.2",
-  "numpy>=1.23.0,<3",
-  "scipy>=1.8.0",
-  "pre-commit>=2.20.0",
   "deptry>=0.22.0",
-]
-test = [
-  "typing-extensions>=4.12.2",
   "numpy>=1.23.0,<3",
+  "pre-commit>=2.20.0",
   "scipy>=1.8.0",
-  "pytest>=7.2.0",
-  "pytest-cov>=4.0.0",
-  "pytest-xdist>=3.6.1",
-  "pytest-env>=1.1.5",
-  "hypothesis>=6.127.1",
-  "tox-uv>=1.11.3",
-  "lark>=1.2.2",
+  "typing-extensions>=4.12.2",
 ]
 lint = [
-  "ruff>=0.9.2",
   "deptry>=0.22.0",
-  "vulture>=2.0.0",
-  "pyroma>=4.2",
   "numpydoc>=1.8.0",
+  "pyroma>=4.2",
+  "ruff>=0.9.2",
   "ty>=0.0.1a25",
+  "vulture>=2.0.0",
+]
+test = [
+  "hypothesis>=6.127.1",
+  "lark>=1.2.2",
+  "numpy>=1.23.0,<3",
+  "pytest>=7.2.0",
+  "pytest-cov>=4.0.0",
+  "pytest-env>=1.1.5",
+  "pytest-xdist>=3.6.1",
+  "scipy>=1.8.0",
+  "tox-uv>=1.11.3",
+  "typing-extensions>=4.12.2",
 ]
 
 [build-system]
 requires = ["hatchling", "uv-dynamic-versioning"]
 build-backend = "hatchling.build"
+
+[tool.coverage.report]
+exclude_lines = ["if (typing\\.)?TYPE_CHECKING:"]
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+
+[tool.deptry]
+extend_exclude = ["examples", "scripts"]
+
+[tool.deptry.per_rule_ignores]
+DEP004 = ["scipy"]  # SciPy is an optional dependency.
 
 [tool.hatch.version]
 source = "uv-dynamic-versioning"
@@ -74,22 +84,53 @@ source = "uv-dynamic-versioning"
 [tool.hatch.build.targets.wheel]
 packages = ["src/ppftpy"]
 
-[tool.uv-dynamic-versioning]
-vcs = "git"
-style = "pep440"
-metadata = false
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["regression"]
+addopts = "--cov-config=pyproject.toml --doctest-modules --strict-markers"
 
-[tool.deptry]
-extend_exclude = ["examples", "scripts"]
-
-[tool.deptry.per_rule_ignores]
-DEP004 = ["scipy"] # SciPy is an optional dependency.
-
-[tool.vulture]
-paths = ["src", "tests"]
-min_confidence = 90
-make_whitelist = true
-sort_by_size = true
+[tool.pytest_env]
+# This is required for parallel tests (using '-n auto') on JAX GPU devices as
+# tests would run out of GPU memory otherwise.
+# See https://docs.jax.dev/en/latest/gpu_memory_allocation.html.
+XLA_PYTHON_CLIENT_PREALLOCATE = { value = "false", skip_if_set = true }
+# Limit the number of threads for pyFFTW to one thread. As parallel tests seem
+# to fail for a high worker amount, this attempts to reduce the errors during
+# tests. The positive effect of this limitation must be evaluated.
+# See https://pyfftw.readthedocs.io/en/latest/source/pyfftw/pyfftw.html#fftw-configuration.
+PYFFTW_NUM_THREADS = { value = "1", skip_if_set = true }
+# Use double precision for JAX arrays as default to allow for better
+# comparability during regression tests with reference implementation and other
+# backends. Otherwise, JAX would default to single precision.
+# See https://docs.jax.dev/en/latest/notebooks/Common_Gotchas_in_JAX.html#double-64bit-precision.
+JAX_ENABLE_X64 = { value = "True", skip_if_set = true }
+# List of backends that are enabled for tests regression tests. Each backend
+# can be extended with devices. Backends are separated with semicolon (;) and
+# devices are separated with commas (,). Tests that cannot be run due to
+# missing packages are skipped automatically.
+#
+# Available options: ['all', 'numpy', 'cupy', 'dpnp', 'dask', 'jax', 'torch']
+#
+# Examples:
+#   - 'numpy' (Default: only use NumPy backend)
+#   - 'numpy;dask:cpu' (Use NumPy and Dask backends on CPU only)
+#   - 'cupy' (Only enable CuPy on GPU)
+#   - 'torch:xpu,cuda,rocm' (Use PyTorch with XPU, CUDA, and ROCm backend)
+#   - 'all' (Enable all backends)
+TEST_BACKENDS_ARRAY = { value = "numpy", skip_if_set = true }
+# List of backends that are enabled for SciPy-compatible tests. Each
+# SciPy-compatible backend uses all applicable array backends specified in
+# 'TEST_BACKENDS_ARRAY'. Backends are separated with semicolon (;). Tests that
+# cannot be run due to missing packages are skipped automatically.
+#
+# Available options: ['all', 'scipy', 'mkl', 'pyfftw', 'cupy']
+#
+# Examples:
+#   - 'scipy' (Default: only use SciPy backend)
+#   - 'scipy;mkl;pyfftw' (Enable SciPy, mkl_fft, and pyFFTW backends)
+#   - 'cupy' (Only run SciPy backend tests using the CuPy backend)
+#   - 'all' (Enable all backends)
+TEST_BACKENDS_SCIPY = { value = "scipy", skip_if_set = true }
 
 [tool.ruff]
 target-version = "py310"
@@ -116,68 +157,6 @@ convention = "numpy"
 "tests/*" = ["S101"]
 "examples/*" = ["INP001"]
 
-[tool.ty.environment]
-python-platform = "all"
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-markers = ["regression"]
-addopts = "--cov-config=pyproject.toml --doctest-modules --strict-markers"
-
-[tool.pytest_env]
-# This is required for parallel tests (using '-n auto') on JAX GPU devices as
-# tests would run out of GPU memory otherwise.
-# See https://docs.jax.dev/en/latest/gpu_memory_allocation.html.
-XLA_PYTHON_CLIENT_PREALLOCATE = { value = "false", skip_if_set = true }
-
-# Limit the number of threads for pyFFTW to one thread. As parallel tests seem
-# to fail for a high worker amount, this attempts to reduce the errors during
-# tests. The positive effect of this limitation must be evaluated.
-# See https://pyfftw.readthedocs.io/en/latest/source/pyfftw/pyfftw.html#fftw-configuration.
-PYFFTW_NUM_THREADS = { value = "1", skip_if_set = true }
-
-# Use double precision for JAX arrays as default to allow for better
-# comparability during regression tests with reference implementation and other
-# backends. Otherwise, JAX would default to single precision.
-# See https://docs.jax.dev/en/latest/notebooks/Common_Gotchas_in_JAX.html#double-64bit-precision.
-JAX_ENABLE_X64 = { value = "True", skip_if_set = true }
-
-# List of backends that are enabled for tests regression tests. Each backend
-# can be extended with devices. Backends are separated with semicolon (;) and
-# devices are separated with commas (,). Tests that cannot be run due to
-# missing packages are skipped automatically.
-#
-# Available options: ['all', 'numpy', 'cupy', 'dpnp', 'dask', 'jax', 'torch']
-#
-# Examples:
-#   - 'numpy' (Default: only use NumPy backend)
-#   - 'numpy;dask:cpu' (Use NumPy and Dask backends on CPU only)
-#   - 'cupy' (Only enable CuPy on GPU)
-#   - 'torch:xpu,cuda,rocm' (Use PyTorch with XPU, CUDA, and ROCm backend)
-#   - 'all' (Enable all backends)
-TEST_BACKENDS_ARRAY = { value = "numpy", skip_if_set = true }
-
-# List of backends that are enabled for SciPy-compatible tests. Each
-# SciPy-compatible backend uses all applicable array backends specified in
-# 'TEST_BACKENDS_ARRAY'. Backends are separated with semicolon (;). Tests that
-# cannot be run due to missing packages are skipped automatically.
-#
-# Available options: ['all', 'scipy', 'mkl', 'pyfftw', 'cupy']
-#
-# Examples:
-#   - 'scipy' (Default: only use SciPy backend)
-#   - 'scipy;mkl;pyfftw' (Enable SciPy, mkl_fft, and pyFFTW backends)
-#   - 'cupy' (Only run SciPy backend tests using the CuPy backend)
-#   - 'all' (Enable all backends)
-TEST_BACKENDS_SCIPY = { value = "scipy", skip_if_set = true }
-
-[tool.coverage.report]
-exclude_lines = ["if (typing\\.)?TYPE_CHECKING:"]
-
-[tool.coverage.run]
-branch = true
-source = ["src"]
-
 [tool.sphinx]
 source_dir = "docs/source"
 build_dir = "docs/_build"
@@ -202,3 +181,21 @@ commands = [
     "--doctest-modules",
   ],
 ]
+
+[tool.ty.environment]
+python-platform = "all"
+
+[tool.uv]
+managed = true
+default-groups = ["dev", "test"]
+
+[tool.uv-dynamic-versioning]
+vcs = "git"
+style = "pep440"
+metadata = false
+
+[tool.vulture]
+paths = ["src", "tests"]
+min_confidence = 90
+make_whitelist = true
+sort_by_size = true
