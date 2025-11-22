@@ -21,14 +21,15 @@ methods presented in the following papers:
 - Averbuch et al., 2001 — _Fast Slant Stack: A notion of Radon Transform for
   Data in a Cartesian Grid which is Rapidly Computable, Algebraically Exact,
   Geometrically Faithful and Invertible_.
-- [Averbuch & Shkolnisky, 2003](https://doi.org/10.1016/s1063-5203(03)00030-7)
+- [Averbuch & Shkolnisky, 2003](<https://doi.org/10.1016/s1063-5203(03)00030-7>)
   — _3D Fourier based discrete Radon transform_, Applied and Computational
   Harmonic Analysis, Vol. 15, No. 1, pp. 33–69.
 
 ## Features
 
 - GPU-accelerated computation for enhanced performance.
-- Backend-agnostic implementation using the [Array API Standard](https://data-apis.org/array-api/latest/) with no direct dependencies.
+- Backend-agnostic implementation using the
+  [Array API Standard](https://data-apis.org/array-api/latest/) with no direct dependencies.
 - Memory-efficient and fully vectorized modes available.
 - Optimized handling of real-valued input data for improved efficiency.
 - Supports additional FFT backends using SciPy for extended flexibility and
