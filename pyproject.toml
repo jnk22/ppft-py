@@ -154,7 +154,10 @@ convention = "numpy"
 
 [tool.ruff.lint.per-file-ignores]
 "examples/*" = ["INP001"]
-"scripts/*" = ["T201"]
+"scripts/*" = [
+  "T201",  # Allow print statements for simple script
+  "PLC0415",  # Allow lazy imports for startup performance
+]
 "tests/*" = ["S101"]
 
 [tool.sphinx]
