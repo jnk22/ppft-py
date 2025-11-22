@@ -93,7 +93,7 @@ class DefaultConfiguration:
 # Default configurations.
 DEFAULT_CONFIGS: Final[dict[Dimension, DefaultConfiguration]] = {
     2: DefaultConfiguration(
-        download_url="https://github.com/ShkolniskyLab/PPFT2D/archive/69eea1d/main.zip",
+        download_url="https://github.com/ShkolniskyLab/PPFT2D/archive/f3e0c92/main.zip",
         functions={"slowPPFT", "PPFT", "OptimizedPPFT"},
         nargout=2,
     ),
